@@ -30,7 +30,7 @@ kubectl apply -f k8s-manifests/
 
 ```bash
 # Persistence Gateway Secret and CRD
-kubectl apply -f rtf-persistence-gateway/
+kubectl apply -f persistence-gateway-crd/
 ```
 
 ### Verify
@@ -39,8 +39,11 @@ kubectl apply -f rtf-persistence-gateway/
 # postgres pod in default namespace should be Running
 kubectl get po
 
+# get persistence gateway pod ID
+PGW_POD_ID=$(kubectl get pods --selector='app=persistence-gateway' -o jsonpath='{.items[0].metadata.name}' -n rtf)
+
 # check persistent gateway pods's log
-kubetl -n rtf logs -f persistence-gateway-<rs-uuid>-<pod-uuid>
+kubectl -n rtf logs -f $PGW_POD_ID  
 
 # or  
 kubectl -n rtf logs deployment/persistence-gateway
